@@ -1,0 +1,118 @@
+version: '3.4'
+
+x-redash-service: &redash-service
+  image: redash/redash:8.0.0.b32245
+  depends_on:
+    - redash-postgres
+    - redash-redis
+  env_file: ./redash/redash.env
+  restart: always
+
+volumes:
+  mongo_data: {}
+  # redash_data: {}
+
+services: 
+  worker-scraper:
+    build: .
+    image: &img worker 
+    command: [celery, worker, --app=worker_scraper.app, --queues=scraper]
+    env_file: &env_files
+      - app_settings.env
+      - mongo_root_credentials.env
+    environment: &env    
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672
+      - CELERY_RESULT_BACKEND=rpc
+      - CELERY_WORKER_SEND_TASK_EVENTS=True
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./app:/app 
+    restart: 'always'
+
+  worker-mongo:
+    build: .
+    image: *img
+    command: [celery, worker, --app=worker_mongo.app, --queues=mongo]
+    env_file: *env_files
+    environment: *env
+    depends_on: 
+      - rabbitmq
+      - mongodb
+    volumes: 
+      - ./app:/app
+    links:
+      - "mongodb"
+    restart: 'always'
+
+  rabbitmq:
+    image: rabbitmq:3.8
+    environment: 
+      - RABBITMQ_LOGS=./rabbit/rabbitlogs.conf
+    restart: 'always'
+
+  mongodb:
+    image: mongo
+    command: [mongod, --auth]
+    environment:
+      - MONGO_INITDB_DATABASE=wiki
+    env_file: 
+      - mongo_root_credentials.env
+    volumes:
+      - ./mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - mongo_data:/data/db
+    ports:
+      - '27017-27019:27017-27019'
+
+  # REDASH SERVICES
+  # to create postgres database run: docker-compose run --rm redash-server create_db
+
+  # redash-server:
+  #   <<: *redash-service
+  #   command: [server]
+  #   ports:
+  #     - "5000:5000"
+  #   environment:
+  #     REDASH_WEB_WORKERS: 4
+
+  # redash-scheduler:
+  #   <<: *redash-service
+  #   command: scheduler
+  #   environment:
+  #     QUEUES: "celery"
+  #     WORKERS_COUNT: 1
+
+  # redash-scheduled-worker:
+  #   <<: *redash-service
+  #   command: worker
+  #   environment:
+  #     QUEUES: "scheduled_queries,schemas"
+  #     WORKERS_COUNT: 1
+
+  # redash-adhoc-worker:
+  #   <<: *redash-service
+  #   command: worker
+  #   environment:
+  #     QUEUES: "queries"
+  #     WORKERS_COUNT: 2
+
+  # redash-redis:
+  #   image: redis:5.0-alpine
+  #   restart: always
+
+  # redash-postgres:
+  #   image: postgres:9.6-alpine
+  #   env_file: ./redash/redash.env
+  #   volumes:
+  #     - redash_data:/var/lib/postgresql/data
+  #   restart: always
+
+  # redash-nginx:
+  #   image: redash/nginx:latest
+  #   ports:
+  #     - "90:80"
+  #   depends_on:
+  #     - redash-server
+  #   links:
+  #     - redash-server:redash
+  #   restart: always
