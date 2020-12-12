@@ -5,7 +5,7 @@ from celery import signature
 from celery_base import app
 from docker_logs import get_logger
 
-logging = get_logger("worker-mongo")
+logging = get_logger("worker-scraper")
 
 
 @app.task(bind=True, name='get_subcategories')
@@ -16,7 +16,8 @@ def get_subcategories(
     main_category: str,
     level: int
 ):
-    max_level = os.environ['max_level']
+
+    max_level = int(os.environ['max_level'])
 
     url = ''.join([
         'https://pl.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=',
@@ -34,9 +35,20 @@ def get_subcategories(
         for cat in sub_cats:
 
             x = signature(
+                'save_category',
+                args=[
+                    cat['title'],
+                    category,
+                    main_category,
+                    level
+                ]
+            )
+            x.apply_async()
+
+            x = signature(
                 'get_subcategories',
                 args=[
-                    cat,
+                    cat['title'],
                     category,
                     main_category,
                     level + 1
@@ -45,14 +57,4 @@ def get_subcategories(
             x.apply_async()
 
     else:
-
-        x = signature(
-            'save_category',
-            args=[
-                category,
-                parent_category,
-                main_category,
-                level
-            ]
-        )
-        x.apply_async()
+        logging.info('ROOT')

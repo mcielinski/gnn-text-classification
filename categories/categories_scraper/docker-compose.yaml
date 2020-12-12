@@ -10,7 +10,7 @@ x-redash-service: &redash-service
 
 volumes:
   mongo_data: {}
-  # redash_data: {}
+  redash_data: {}
 
 services: 
   worker-scraper:
@@ -67,52 +67,52 @@ services:
   # REDASH SERVICES
   # to create postgres database run: docker-compose run --rm redash-server create_db
 
-  # redash-server:
-  #   <<: *redash-service
-  #   command: [server]
-  #   ports:
-  #     - "5000:5000"
-  #   environment:
-  #     REDASH_WEB_WORKERS: 4
+  redash-server:
+    <<: *redash-service
+    command: [server]
+    ports:
+      - "5000:5000"
+    environment:
+      REDASH_WEB_WORKERS: 4
 
-  # redash-scheduler:
-  #   <<: *redash-service
-  #   command: scheduler
-  #   environment:
-  #     QUEUES: "celery"
-  #     WORKERS_COUNT: 1
+  redash-scheduler:
+    <<: *redash-service
+    command: scheduler
+    environment:
+      QUEUES: "celery"
+      WORKERS_COUNT: 1
 
-  # redash-scheduled-worker:
-  #   <<: *redash-service
-  #   command: worker
-  #   environment:
-  #     QUEUES: "scheduled_queries,schemas"
-  #     WORKERS_COUNT: 1
+  redash-scheduled-worker:
+    <<: *redash-service
+    command: worker
+    environment:
+      QUEUES: "scheduled_queries,schemas"
+      WORKERS_COUNT: 1
 
-  # redash-adhoc-worker:
-  #   <<: *redash-service
-  #   command: worker
-  #   environment:
-  #     QUEUES: "queries"
-  #     WORKERS_COUNT: 2
+  redash-adhoc-worker:
+    <<: *redash-service
+    command: worker
+    environment:
+      QUEUES: "queries"
+      WORKERS_COUNT: 2
 
-  # redash-redis:
-  #   image: redis:5.0-alpine
-  #   restart: always
+  redash-redis:
+    image: redis:5.0-alpine
+    restart: always
 
-  # redash-postgres:
-  #   image: postgres:9.6-alpine
-  #   env_file: ./redash/redash.env
-  #   volumes:
-  #     - redash_data:/var/lib/postgresql/data
-  #   restart: always
+  redash-postgres:
+    image: postgres:9.6-alpine
+    env_file: ./redash/redash.env
+    volumes:
+      - redash_data:/var/lib/postgresql/data
+    restart: always
 
-  # redash-nginx:
-  #   image: redash/nginx:latest
-  #   ports:
-  #     - "90:80"
-  #   depends_on:
-  #     - redash-server
-  #   links:
-  #     - redash-server:redash
-  #   restart: always
+  redash-nginx:
+    image: redash/nginx:latest
+    ports:
+      - "90:80"
+    depends_on:
+      - redash-server
+    links:
+      - redash-server:redash
+    restart: always

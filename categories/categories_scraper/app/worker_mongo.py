@@ -1,4 +1,5 @@
 import os
+import pymongo
 
 from celery_base import app
 from docker_logs import get_logger
@@ -40,6 +41,7 @@ def save_category(
         logging.info('Cannot send item to MongoDB')
         logging.info(e)
     finally:
-        logging.info('Item send to MongoDB - ', category)
+        # logging.info('Item send to MongoDB - ', str(category))
+        logging.info('Item send to MongoDB')
 
     myclient.close()

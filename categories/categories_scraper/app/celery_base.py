@@ -13,8 +13,21 @@ app.conf.update({
     'accept_content': ['pickle']
 })
 
-start_category = os.environ['MONGO_INITDB_ROOT_USERNAME']
+start_category = os.environ['main_category']
 
+# save main category
+x = signature(
+    'save_category',
+    args=[
+        start_category,
+        start_category,
+        start_category,
+        1
+    ]
+)
+x.apply_async()
+
+# run recurrent loop
 x = signature(
     'get_subcategories',
     args=[
