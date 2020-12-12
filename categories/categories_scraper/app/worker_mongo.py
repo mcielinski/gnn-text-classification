@@ -29,9 +29,9 @@ def save_category(
     mycol = mydb["categories"]
 
     category = {
-        'category_name': category,
-        'parent_category': parent_category,
-        'main_category': main_category,
+        'category_name': category.replace('Kategoria:', ''),
+        'parent_category': parent_category.replace('Kategoria:', ''),
+        'main_category': main_category.replace('Kategoria:', ''),
         'level': level
     }
 
