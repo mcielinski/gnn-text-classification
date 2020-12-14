@@ -95,8 +95,12 @@ def unescape_xml(text):
     return text
 
 def get_wiki_document_url(wiki_document_title, prefix):
-    quoted_title = urllib.parse.quote(wiki_document_title.replace(' ', '_').encode('utf-8'))
-    quoted_title = quoted_title.replace('%28', '(').replace('%29', ')')
+    quoted_title = wiki_document_title.replace(' ', '_')
+    # ----
+    # quoted_title = urllib.parse.quote(wiki_document_title.replace(' ', '_'))
+    # ----
+    # quoted_title = urllib.parse.quote(wiki_document_title.replace(' ', '_').encode('utf-8'))
+    # quoted_title = quoted_title.replace('%28', '(').replace('%29', ')')
     return prefix + quoted_title[0].upper() + quoted_title[1:]
 
 def extract_pages_from_dump(filestream):

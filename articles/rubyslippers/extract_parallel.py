@@ -83,13 +83,15 @@ for idx, page in tqdm(enumerate(extract_pages_from_dump(sys.stdin))):
                 wiki_page = wiki_page_processing(wiki_page)
                 
                 if wiki_page is not None:
-                    with open(output_dir + str(wiki_page['id']) +'.json', 'w') as fout:
-                        json.dump(wiki_page, fout)
+                    with open(output_dir + str(wiki_page['id']) +'.json', 'w', encoding='utf8') as fout:
+                        json.dump(wiki_page, fout, ensure_ascii=False)
+                    # with open(output_dir + str(wiki_page['id']) +'.json', 'w') as fout:
+                    #     json.dump(wiki_page, fout)
 
                     # Save annotation pairs do csv (row: <source_pade, annotation>)
                     source_page, annotations = get_annotation_info(wiki_page)
 
-                    with open(annotations_file_path, 'a') as f:
+                    with open(annotations_file_path, 'a', encoding='utf-8') as f:
                         writer = csv.writer(f, delimiter=',', lineterminator='\n',)
                         for annotation in annotations:
                             row = [source_page, annotation]
@@ -102,18 +104,20 @@ if len(pages) > 0:
     ):
         if wiki_page:
             # Returns None if none of the page categories are in the list cats_to_save
-                # otherwise, returns the wiki_page dict extended by the corresponding main category
-                wiki_page = wiki_page_processing(wiki_page)
-                
-                if wiki_page is not None:
-                    with open(output_dir + str(wiki_page['id']) +'.json', 'w') as fout:
-                        json.dump(wiki_page, fout)
+            # otherwise, returns the wiki_page dict extended by the corresponding main category
+            wiki_page = wiki_page_processing(wiki_page)
+            
+            if wiki_page is not None:
+                with open(output_dir + str(wiki_page['id']) +'.json', 'w', encoding='utf8') as fout:
+                    json.dump(wiki_page, fout, ensure_ascii=False)
+                # with open(output_dir + str(wiki_page['id']) +'.json', 'w') as fout:
+                #     json.dump(wiki_page, fout)
 
-                    # Save annotation pairs do csv (row: <source_pade, annotation>)
-                    source_page, annotations = get_annotation_info(wiki_page)
+                # Save annotation pairs do csv (row: <source_pade, annotation>)
+                source_page, annotations = get_annotation_info(wiki_page)
 
-                    with open(annotations_file_path, 'a') as f:
-                        writer = csv.writer(f, delimiter=',', lineterminator='\n',)
-                        for annotation in annotations:
-                            row = [source_page, annotation]
-                            writer.writerow(row)
+                with open(annotations_file_path, 'a', encoding='utf-8') as f:
+                    writer = csv.writer(f, delimiter=',', lineterminator='\n',)
+                    for annotation in annotations:
+                        row = [source_page, annotation]
+                        writer.writerow(row)
