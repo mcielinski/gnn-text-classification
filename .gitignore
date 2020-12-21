@@ -2,6 +2,7 @@
 test.ipynb
 out/
 copy/
+tools.txt
 
 # wiki dump
 *.bz2
