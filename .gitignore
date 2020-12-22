@@ -3,6 +3,7 @@ test.ipynb
 out/
 copy/
 tools.txt
+*venv
 
 # wiki dump
 *.bz2
