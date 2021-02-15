@@ -1,0 +1,1 @@
+# ajn-gmum-project
