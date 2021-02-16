@@ -5,6 +5,8 @@ This project is about using graph neural networks (GNNs) as a method to improve 
 ## Dataset
 In the project problem of classification polish Wikipedia pages to science fields was considered. Pages were parsed from polish Wikipedia dump and labelled by matching their categories to the closest of the seven choosen main categories related with science fields based on scrapped Wikipedia categories tree. Also links between pages were saved during dump parsing.
 
+Prepared dataset has been published [here](https://github.com/kornelro/polish-wikipedia-graph-dataset).
+
 ## Graphs
 Two types of graphs have been used.
 
