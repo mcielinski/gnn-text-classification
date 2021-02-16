@@ -1,1 +1,1 @@
-This folder contains a modified version of [rubyslippers](https://github.com/alvations/rubyslippers) project under GPL-3.0 License.
+This folder contains a modified version of [rubyslippers](https://github.com/alvations/rubyslippers) project which is built upon [Annotated-WikiExtractor](https://github.com/jodaiber/Annotated-WikiExtractor) under GPL-3.0 License.
