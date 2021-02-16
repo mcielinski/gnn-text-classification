@@ -1,0 +1,1 @@
+This folder contains a modified version of [rubyslippers](https://github.com/alvations/rubyslippers) project under GPL-3.0 License.
