@@ -7,7 +7,9 @@ In the project problem of classification polish Wikipedia pages to science field
 
 ## Graphs
 Two types of graphs have been used.
+
 **Articles graph** - node represent pages ang edges between nodes represent links between articles.
+
 **Articles and words graph** - this graph is articles graph extended by nodes representing words and edges between word nodes and article nodes created if word appears in article. In this approache as word nodes were considered only some number of most common specific nouns from each category.
 
 ## Methods
@@ -26,6 +28,7 @@ Classification models:
 
 ## Results
 Pipelines visualisation and all results are available in this [presentation](https://docs.google.com/presentation/d/18CCJkarKveK2ipv39uiDpUuNiH2JJqEgfQjidMj1Pyg/edit?usp=sharing).
+
 Conducted experiments showed that acquired pages can be proper classified using HerBERT embeddings and simple MLP. In this scenario GNNs didn't improve the results. But using poorer (also faster to calcualte) representation, like one-hot encoding of selected nouns, GNNs gave significant improve (equaled the results to HerBERT scenario).
 
 ## Project structure
